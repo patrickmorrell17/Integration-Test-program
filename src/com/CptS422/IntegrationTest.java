@@ -1,19 +1,31 @@
 package com.CptS422;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections4.list.GrowthList;
+import org.apache.commons.collections4.list.TreeList;
 import org.hamcrest.Matchers;
 import org.powermock.api.mockito.PowerMockito;
 
 public class IntegrationTest {
 	
 	static List<Grade> allGrades;
+
+	static AverageGrades averageGrades;
+	static TempAbstractLinkedList list;
 	
 	static Grade grade1;
 	
@@ -25,6 +37,8 @@ public class IntegrationTest {
 	
 	static Grade grade5;
 	
+	static Grade grade6;
+	
 	public static void main(String[] args) throws Exception {
 		integrateMenu();
 		integrateFilterByValueLessThan();
@@ -34,6 +48,20 @@ public class IntegrationTest {
 		integrateFilterByOccurencesScore();
 		integrateFilterByOccurencesGrade();
 		integrateShowResults();
+		
+		integrateMinMaxAvgMenu();
+		integrateGetMaxLetterGradeFromList();
+		integrateGetMinLetterGradeFromList();
+		integrateGetMaxScoreFromList();
+		integrateGetMinScoreFromList();
+		integrateGetAvgScoreFromList();
+		
+		//integrateAddGrade();
+		//integrateRemoveGradeIndex();
+		//integrateRemoveAllGrade();
+		//integrateDisplayGrade();
+
+		integrateAverageGrades();
 	}
 	
 	static void integrateMenu() throws Exception
@@ -718,5 +746,456 @@ public class IntegrationTest {
 				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
 
 		System.out.print("\nPassed integrateShowResults\n\n");
+	}
+	
+	static void integrateAddGrade() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		GrowthList<Grade> list1 = new GrowthList<Grade>();
+		DisplayGrades display = new DisplayGrades(5);
+		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
+		
+		sList.gradeList = list1;
+		display.addGrade(grade1);
+		verify(display.gradeList, atLeastOnce()).add(grade1);
+	}
+	
+	static void integrateRemoveGradeIndex() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		GrowthList<Grade> list = new GrowthList<Grade>();
+		DisplayGrades display = new DisplayGrades(5);
+		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
+		
+		doReturn(display).when(sList);
+		PowerMockito.when(sList.gradeList).thenReturn(list);
+		
+		assertTrue(list.isEmpty());
+		list.add(grade1);
+		list.add(grade2);
+		assertTrue(!list.isEmpty());
+		assertEquals(2, list.size());
+		list.remove(0);
+		assertTrue(!list.isEmpty());
+		assertEquals(1, list.size());
+		
+		display.addGrade(grade1);
+		display.addGrade(grade2);
+		display.addGrade(grade3);
+		display.removeGradeIndex(0);
+		verify(display.gradeList, atLeastOnce()).remove(0);
+	}
+	
+	static void integrateRemoveAllGrade() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		GrowthList<Grade> list = new GrowthList<Grade>();
+		DisplayGrades display = new DisplayGrades(5);
+		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
+		
+		doReturn(display).when(sList);
+		PowerMockito.when(sList.gradeList).thenReturn(list);
+		
+		assertTrue(list.isEmpty());
+		list.add(grade1);
+		list.add(grade2);
+		assertTrue(!list.isEmpty());
+		assertEquals(2, list.size());
+		list.remove(0);
+		assertTrue(!list.isEmpty());
+		assertEquals(1, list.size());
+		
+		display.addGrade(grade1);
+		display.addGrade(grade2);
+		display.addGrade(grade3);
+		display.removeAllGrades();
+		verify(display.gradeList, atLeastOnce()).removeAll(list);
+	}
+	
+	static void integrateDisplayGrade() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		DisplayGrades display = new DisplayGrades(5);
+		assertTrue(display.gradeList.isEmpty());
+		display.addGrade(grade1);
+		display.addGrade(grade2);
+		display.addGrade(grade3);
+		
+		final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+		final PrintStream originalOut = System.out;
+		System.setOut(new PrintStream(outContent));
+		System.setOut(originalOut);
+		
+		display.displayGrades();
+		assertEquals("CptS 322: A\nCptS 321: A\nCptS 317: B\n", outContent.toString());
+	}
+	
+	static void integrateMinMaxAvgMenu() throws Exception
+	{
+		grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(45.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		grade6 = new Grade(88.0, "CptS 422");
+		
+		TreeList<Grade> allTreeGrades = new TreeList<Grade>();
+		
+		Collections.addAll(allTreeGrades, grade1, grade2, grade3, grade4, grade5, grade6);
+		
+		MinMaxAvgGrades GradeMinMaxAvg = new MinMaxAvgGrades();
+		
+		MinMaxAvgGrades sGradeMinMaxAvg = PowerMockito.spy(GradeMinMaxAvg);
+		
+		String ret;
+		// 1
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxLetterGradeFromList(allTreeGrades)).thenReturn(
+				'A');
+		
+		
+		ret = sGradeMinMaxAvg.MinMaxAvgMain(allTreeGrades, 1);
+		
+		assertEquals("The maximum Grade is: A", ret);
+		// 2
+		PowerMockito.when(sGradeMinMaxAvg.GetMinLetterGradeFromList(allTreeGrades)).thenReturn(
+				'F');
+		
+		
+		ret = sGradeMinMaxAvg.MinMaxAvgMain(allTreeGrades, 2);
+		
+		assertEquals("The minimum Grade is: F", ret);
+		// 3
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxScoreFromList(allTreeGrades)).thenReturn(
+				90.1);
+		
+		
+		ret = sGradeMinMaxAvg.MinMaxAvgMain(allTreeGrades, 3);
+		
+		assertEquals("The maximum Score is: 90.1", ret);
+		// 4
+		PowerMockito.when(sGradeMinMaxAvg.GetMinScoreFromList(allTreeGrades)).thenReturn(
+				45.0);
+		
+		
+		ret = sGradeMinMaxAvg.MinMaxAvgMain(allTreeGrades, 4);
+		
+		assertEquals("The minimum Score is: 45.0", ret);
+		// 5
+		PowerMockito.when(sGradeMinMaxAvg.GetAvgScoreFromList(allTreeGrades)).thenReturn(
+				73.5);
+		
+		
+		ret = sGradeMinMaxAvg.MinMaxAvgMain(allTreeGrades, 5);
+		
+		assertEquals("The average Score is: 73.5", ret);
+
+		System.out.print("\nPassed integrateMinMaxAvgMenu\n\n");
+	}
+	
+	static void integrateGetMaxLetterGradeFromList() throws Exception
+	{
+		grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(45.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		grade6 = new Grade(88.0, "CptS 422");
+		
+		TreeList<Grade> allTreeGrades = new TreeList<Grade>();
+		
+		Collections.addAll(allTreeGrades, grade1, grade2, grade3, grade4, grade5, grade6);
+		
+		MinMaxAvgGrades GradeMinMaxAvg = new MinMaxAvgGrades();
+		
+		MinMaxAvgGrades sGradeMinMaxAvg = PowerMockito.spy(GradeMinMaxAvg);
+		
+		String ret;
+		// 1
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxLetterGradeFromList(allTreeGrades)).thenReturn(
+				'A');
+				
+		char retChar = sGradeMinMaxAvg.GetMaxLetterGradeFromList(allTreeGrades);
+		
+		assertEquals('A', retChar);
+		// 2
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade2, grade3, grade4, grade5, grade6);
+		
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxLetterGradeFromList(allTreeGrades)).thenReturn(
+				'B');
+				
+		retChar = sGradeMinMaxAvg.GetMaxLetterGradeFromList(allTreeGrades);
+		
+		assertEquals('B', retChar);
+		// 3
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade5);
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxLetterGradeFromList(allTreeGrades)).thenReturn(
+				'D');
+				
+		retChar = sGradeMinMaxAvg.GetMaxLetterGradeFromList(allTreeGrades);
+		
+		assertEquals('D', retChar);
+		
+		
+		System.out.print("\nPassed integrateGetMaxLetterGradeFromList\n\n");
+	}
+	
+	static void integrateGetMinLetterGradeFromList() throws Exception
+	{
+        grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(45.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		grade6 = new Grade(88.0, "CptS 422");
+		
+		TreeList<Grade> allTreeGrades = new TreeList<Grade>();
+		
+		Collections.addAll(allTreeGrades, grade1, grade2, grade3, grade4, grade5, grade6);
+		
+		MinMaxAvgGrades GradeMinMaxAvg = new MinMaxAvgGrades();
+		
+		MinMaxAvgGrades sGradeMinMaxAvg = PowerMockito.spy(GradeMinMaxAvg);
+		
+		String ret;
+		// 1
+		PowerMockito.when(sGradeMinMaxAvg.GetMinLetterGradeFromList(allTreeGrades)).thenReturn(
+				'F');
+				
+		char retChar = sGradeMinMaxAvg.GetMinLetterGradeFromList(allTreeGrades);
+		
+		assertEquals('F', retChar);
+		// 2
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3, grade4, grade5, grade6);
+		
+		PowerMockito.when(sGradeMinMaxAvg.GetMinLetterGradeFromList(allTreeGrades)).thenReturn(
+				'D');
+				
+		retChar = sGradeMinMaxAvg.GetMinLetterGradeFromList(allTreeGrades);
+		
+		assertEquals('D', retChar);
+		// 3
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3);
+		PowerMockito.when(sGradeMinMaxAvg.GetMinLetterGradeFromList(allTreeGrades)).thenReturn(
+				'B');
+				
+		retChar = sGradeMinMaxAvg.GetMinLetterGradeFromList(allTreeGrades);
+		
+		assertEquals('B', retChar);
+		System.out.print("\nPassed integrateGetMinLetterGradeFromList\n\n");
+	}
+	
+	static void integrateGetMaxScoreFromList() throws Exception
+	{
+	    grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(45.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		grade6 = new Grade(88.0, "CptS 422");
+		
+		TreeList<Grade> allTreeGrades = new TreeList<Grade>();
+		
+		Collections.addAll(allTreeGrades, grade1, grade2, grade3, grade4, grade5, grade6);
+		
+		MinMaxAvgGrades GradeMinMaxAvg = new MinMaxAvgGrades();
+		
+		MinMaxAvgGrades sGradeMinMaxAvg = PowerMockito.spy(GradeMinMaxAvg);
+		
+		String ret;
+		// 1
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxScoreFromList(allTreeGrades)).thenReturn(
+				90.1);
+				
+		double retDouble = sGradeMinMaxAvg.GetMaxScoreFromList(allTreeGrades);
+		
+		assertEquals(90.1, retDouble);
+		// 2
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3, grade4, grade5, grade6);
+		
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxScoreFromList(allTreeGrades)).thenReturn(
+				88.0);
+				
+		retDouble = sGradeMinMaxAvg.GetMaxScoreFromList(allTreeGrades);
+		
+		assertEquals(88.0, retDouble);
+		// 3
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3);
+		PowerMockito.when(sGradeMinMaxAvg.GetMaxScoreFromList(allTreeGrades)).thenReturn(
+				82.0);
+				
+		retDouble = sGradeMinMaxAvg.GetMaxScoreFromList(allTreeGrades);
+		
+		assertEquals(82.0, retDouble);
+		System.out.print("\nPassed integrateGetMaxScoreFromList\n\n");
+	}
+	
+	static void integrateGetMinScoreFromList() throws Exception
+	{
+        grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(45.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		grade6 = new Grade(88.0, "CptS 422");
+		
+		TreeList<Grade> allTreeGrades = new TreeList<Grade>();
+		
+		Collections.addAll(allTreeGrades, grade1, grade2, grade3, grade4, grade5, grade6);
+		
+		MinMaxAvgGrades GradeMinMaxAvg = new MinMaxAvgGrades();
+		
+		MinMaxAvgGrades sGradeMinMaxAvg = PowerMockito.spy(GradeMinMaxAvg);
+		
+		String ret;
+		// 1
+		PowerMockito.when(sGradeMinMaxAvg.GetMinScoreFromList(allTreeGrades)).thenReturn(
+				45.0);
+				
+		double retDouble = sGradeMinMaxAvg.GetMinScoreFromList(allTreeGrades);
+		
+		assertEquals(45.0, retDouble);
+		// 2
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3, grade4, grade5, grade6);
+		
+		PowerMockito.when(sGradeMinMaxAvg.GetMinScoreFromList(allTreeGrades)).thenReturn(
+				61.0);
+				
+		retDouble = sGradeMinMaxAvg.GetMinScoreFromList(allTreeGrades);
+		
+		assertEquals(61.0, retDouble);
+		// 3
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3);
+		PowerMockito.when(sGradeMinMaxAvg.GetMinScoreFromList(allTreeGrades)).thenReturn(
+				82.0);
+				
+		retDouble = sGradeMinMaxAvg.GetMinScoreFromList(allTreeGrades);
+		
+		assertEquals(82.0, retDouble);
+		System.out.print("\nPassed integrateGetMinScoreFromList\n\n");
+	}
+	
+	static void integrateGetAvgScoreFromList() throws Exception
+	{
+        grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(45.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		grade6 = new Grade(88.0, "CptS 422");
+		
+		TreeList<Grade> allTreeGrades = new TreeList<Grade>();
+		
+		Collections.addAll(allTreeGrades, grade1, grade2, grade3, grade4, grade5, grade6);
+		
+		MinMaxAvgGrades GradeMinMaxAvg = new MinMaxAvgGrades();
+		
+		MinMaxAvgGrades sGradeMinMaxAvg = PowerMockito.spy(GradeMinMaxAvg);
+		
+		String ret;
+		// 1
+		PowerMockito.when(sGradeMinMaxAvg.GetAvgScoreFromList(allTreeGrades)).thenReturn(
+				73.5);
+				
+		double retDouble = sGradeMinMaxAvg.GetAvgScoreFromList(allTreeGrades);
+		
+		assertEquals(73.5, retDouble);
+		// 2
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3, grade4, grade5, grade6);
+		
+		PowerMockito.when(sGradeMinMaxAvg.GetAvgScoreFromList(allTreeGrades)).thenReturn(
+				51.0);
+				
+		retDouble = sGradeMinMaxAvg.GetAvgScoreFromList(allTreeGrades);
+		
+		assertEquals(51.0, retDouble);
+		// 3
+		allTreeGrades.clear();
+		Collections.addAll(allTreeGrades, grade3);
+		PowerMockito.when(sGradeMinMaxAvg.GetAvgScoreFromList(allTreeGrades)).thenReturn(
+				82.0);
+				
+		retDouble = sGradeMinMaxAvg.GetAvgScoreFromList(allTreeGrades);
+		
+		assertEquals(82.0, retDouble);
+		System.out.print("\nPassed integrateGetAvgScoreFromList\n\n");
+	}
+
+	static void integrateAverageGrades(){
+		Grade grade1 = new Grade(90.1, "CptS 322");
+
+		Grade grade2 = new Grade(96.0, "CptS 321");
+
+		Grade grade3 = new Grade(82.0, "CptS 317");
+
+		Grade grade4 = new Grade(75.0, "CptS 315");
+
+		Grade grade5 = new Grade(61.0, "CptS 360");
+		list = new TempAbstractLinkedList();
+		list.init2();
+		list.add(grade1);
+		list.add(grade2);
+		list.add(grade3);
+		list.add(grade4);
+		list.add(grade5);
+		averageGrades = new AverageGrades(list);
+		Double temp = (averageGrades.getAverageGrade());
+		Double temp2 = 80.82000000000001;
+		assertEquals(temp2, temp);
+		System.out.print("\nPassed integrateAverageGrades\n\n");
 	}
 }

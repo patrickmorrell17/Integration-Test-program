@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.commons.collections4.list.TreeList;
+
 public class Main {
 	
 	private static Scanner in = new Scanner(System.in);
@@ -36,6 +38,8 @@ public class Main {
 		switch (selection)
 		{
 			case 1:
+				
+				
 				break;
 			case 2:
 				FilterGrades gradeFilterer = new FilterGrades();
@@ -45,11 +49,23 @@ public class Main {
 				break;
 			case 3:
 				
+				DisplayGrades gradeDisplayer = new DisplayGrades(allGrades.size());
+				
+				gradeDisplayer.displayGrades();
+				
 				break;
 			case 4:
+				AverageGrades gradeAverager = new AverageGrades((TempAbstractLinkedList) allGrades);
+				
+				System.out.print(gradeAverager.getAverageGrade());
 				
 				break;
 			case 5:
+				
+				MinMaxAvgGrades gradeFinder = new MinMaxAvgGrades();
+				
+				gradeFinder.MinMaxAvgMenu((TreeList<Grade>) allGrades);
+				
 				break;
 		}
     }
