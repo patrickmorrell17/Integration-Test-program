@@ -1,13 +1,22 @@
 package com.CptS422;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.collections4.list.GrowthList;
 import org.hamcrest.Matchers;
 import org.powermock.api.mockito.PowerMockito;
 
@@ -34,6 +43,10 @@ public class IntegrationTest {
 		integrateFilterByOccurencesScore();
 		integrateFilterByOccurencesGrade();
 		integrateShowResults();
+		integrateAddGrade();
+		integrateRemoveGradeIndex();
+		integrateRemoveAllGrade();
+		integrateDisplayGrade();
 	}
 	
 	static void integrateMenu() throws Exception
@@ -718,5 +731,102 @@ public class IntegrationTest {
 				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
 
 		System.out.print("\nPassed integrateShowResults\n\n");
+	}
+	
+	static void integrateAddGrade() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		GrowthList<Grade> list = new GrowthList<Grade>();
+		DisplayGrades display = new DisplayGrades(5);
+		GrowthList<Grade> sList = PowerMockito.spy(list);
+		
+		doReturn(sList).when(display.gradeList);
+		doNothing().when(display.gradeList).add(grade1);
+		display.addGrade(grade1);
+		verify(display.gradeList, atLeastOnce()).add(grade1);
+	}
+	
+	static void integrateRemoveGradeIndex() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		GrowthList<Grade> list = new GrowthList<Grade>();
+		DisplayGrades display = new DisplayGrades(5);
+		GrowthList<Grade> sList = PowerMockito.spy(list);
+		
+		assertTrue(list.isEmpty());
+		list.add(grade1);
+		list.add(grade2);
+		assertTrue(!list.isEmpty());
+		assertEquals(2, list.size());
+		list.remove(0);
+		assertTrue(!list.isEmpty());
+		assertEquals(1, list.size());
+		
+		doReturn(sList).when(display.gradeList);
+		doNothing().when(sList).remove(0);
+		display.addGrade(grade1);
+		display.addGrade(grade2);
+		display.addGrade(grade3);
+		display.removeGradeIndex(0);
+		verify(display.gradeList, atLeastOnce()).remove(0);
+	}
+	
+	static void integrateRemoveAllGrade() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		GrowthList<Grade> list = new GrowthList<Grade>();
+		DisplayGrades display = new DisplayGrades(5);
+		GrowthList<Grade> sList = PowerMockito.spy(list);
+		
+		assertTrue(list.isEmpty());
+		list.add(grade1);
+		list.add(grade2);
+		assertTrue(!list.isEmpty());
+		assertEquals(2, list.size());
+		list.remove(0);
+		assertTrue(!list.isEmpty());
+		assertEquals(1, list.size());
+		
+		doReturn(sList).when(display.gradeList);
+		doNothing().when(sList).removeAll(sList);
+		display.addGrade(grade1);
+		display.addGrade(grade2);
+		display.addGrade(grade3);
+		display.removeAllGrades();
+		verify(display.gradeList, atLeastOnce()).removeAll(sList);
+	}
+	
+	static void integrateDisplayGrade() {
+		grade1 = new Grade(90.1, "CptS 322");
+		grade2 = new Grade(96.0, "CptS 321");
+		grade3 = new Grade(82.0, "CptS 317");
+		grade4 = new Grade(75.0, "CptS 315");
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		DisplayGrades display = new DisplayGrades(5);
+		assertTrue(display.gradeList.isEmpty());
+		display.addGrade(grade1);
+		display.addGrade(grade2);
+		display.addGrade(grade3);
+		
+		final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+		final PrintStream originalOut = System.out;
+		System.setOut(new PrintStream(outContent));
+		System.setOut(originalOut);
+		
+		display.displayGrades();
+		assertEquals("CptS 322: A\nCptS 321: A\nCptS 317: B\n", outContent.toString());
 	}
 }
