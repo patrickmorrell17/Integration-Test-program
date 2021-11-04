@@ -11,7 +11,7 @@ import java.util.List;
 import org.hamcrest.Matchers;
 import org.powermock.api.mockito.PowerMockito;
 
-public class IntegrationTest {
+public class FilterGradesIntegrationTest {
 	
 	static List<Grade> allGrades;
 	
