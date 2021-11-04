@@ -742,10 +742,10 @@ public class IntegrationTest {
 		
 		GrowthList<Grade> list = new GrowthList<Grade>();
 		DisplayGrades display = new DisplayGrades(5);
-		GrowthList<Grade> sList = PowerMockito.spy(list);
+		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
 		
-		doReturn(sList).when(display.gradeList);
-		doNothing().when(display.gradeList).add(grade1);
+		doReturn(display).when(sList);
+		PowerMockito.when(sList.gradeList).thenReturn(list);
 		display.addGrade(grade1);
 		verify(display.gradeList, atLeastOnce()).add(grade1);
 	}
@@ -759,7 +759,10 @@ public class IntegrationTest {
 		
 		GrowthList<Grade> list = new GrowthList<Grade>();
 		DisplayGrades display = new DisplayGrades(5);
-		GrowthList<Grade> sList = PowerMockito.spy(list);
+		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
+		
+		doReturn(display).when(sList);
+		PowerMockito.when(sList.gradeList).thenReturn(list);
 		
 		assertTrue(list.isEmpty());
 		list.add(grade1);
@@ -770,8 +773,6 @@ public class IntegrationTest {
 		assertTrue(!list.isEmpty());
 		assertEquals(1, list.size());
 		
-		doReturn(sList).when(display.gradeList);
-		doNothing().when(sList).remove(0);
 		display.addGrade(grade1);
 		display.addGrade(grade2);
 		display.addGrade(grade3);
@@ -788,7 +789,10 @@ public class IntegrationTest {
 		
 		GrowthList<Grade> list = new GrowthList<Grade>();
 		DisplayGrades display = new DisplayGrades(5);
-		GrowthList<Grade> sList = PowerMockito.spy(list);
+		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
+		
+		doReturn(display).when(sList);
+		PowerMockito.when(sList.gradeList).thenReturn(list);
 		
 		assertTrue(list.isEmpty());
 		list.add(grade1);
@@ -799,13 +803,11 @@ public class IntegrationTest {
 		assertTrue(!list.isEmpty());
 		assertEquals(1, list.size());
 		
-		doReturn(sList).when(display.gradeList);
-		doNothing().when(sList).removeAll(sList);
 		display.addGrade(grade1);
 		display.addGrade(grade2);
 		display.addGrade(grade3);
 		display.removeAllGrades();
-		verify(display.gradeList, atLeastOnce()).removeAll(sList);
+		verify(display.gradeList, atLeastOnce()).removeAll(list);
 	}
 	
 	static void integrateDisplayGrade() {
