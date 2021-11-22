@@ -38,8 +38,16 @@ public class Main {
 		switch (selection)
 		{
 			case 1:
+				Grade grade1 = new Grade(90.1, "CptS321");
+				Grade grade2 = new Grade(60.0, "CptS422");
+				Grade grade3 = new Grade(77.0, "CptS402");
+				ArrayList<Grade> grades = new ArrayList<Grade>();
+				grades.add(grade1);
+				grades.add(grade2);
+				grades.add(grade3);
 				
-				
+				SortGrades sort = new SortGrades(grades);
+				sort.Menu();
 				break;
 			case 2:
 				FilterGrades gradeFilterer = new FilterGrades();
