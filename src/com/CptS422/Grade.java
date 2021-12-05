@@ -1,5 +1,6 @@
 package com.CptS422;
 
+
 public class Grade {
 	
 	Double score;
@@ -19,19 +20,19 @@ public class Grade {
 	
 	private void calculateLetterGrade()
 	{
-		if (this.score < 60)
+		if (this.score.doubleValue() < 60)
 		{
 			this.grade = 'F';
 		}
-		else if (this.score < 70)
+		else if (this.score.doubleValue() < 70)
 		{
 			this.grade = 'D';
 		}
-		else if (this.score < 80)
+		else if (this.score.doubleValue() < 80)
 		{
 			this.grade = 'C';
 		}
-		else if (this.score < 90)
+		else if (this.score.doubleValue() < 90)
 		{
 			this.grade = 'B';
 		}

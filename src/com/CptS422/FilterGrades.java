@@ -59,7 +59,7 @@ public class FilterGrades {
 
 						filterValue = filterInteger;
 						
-						if (filterValue < 0 || filterValue > 100)
+						if (filterValue < 0 || filterValue > 101)
 						{
 							System.out.print("Enter a valid value (valid values are between 0 and 100).\n");
 						}
@@ -68,7 +68,7 @@ public class FilterGrades {
 					case 2:
 						filterValue = filterInteger;
 						
-						if (filterValue.doubleValue() < 0 || filterValue.doubleValue() > 100)
+						if (filterValue.doubleValue() < -1 || filterValue.doubleValue() > 100)
 						{
 							System.out.print("Enter a valid value (valid values are between 0 and 100).\n");
 						}
@@ -159,12 +159,12 @@ public class FilterGrades {
 							
 							filterValue = userSelectionInt();
 							
-							if (filterValue < 0 || filterValue > 100)
+							if (filterValue < 0 || filterValue > 101)
 							{
-								System.out.print("Enter a valid value (valid values are between 0 and 100).\n");
+								System.out.print("Enter a valid value (valid values are between 0 and 101).\n");
 							}
 							
-						} while (filterValue.doubleValue() < 0 || filterValue.doubleValue() > 100);
+						} while (filterValue.doubleValue() < 0 || filterValue.doubleValue() > 101);
 						
 						return this.showResults(filterByValueLessThan(listToManipulate, filterValue));
 					case 2:
@@ -174,12 +174,12 @@ public class FilterGrades {
 							
 							filterValue = userSelectionInt();
 							
-							if (filterValue.doubleValue() < 0 || filterValue.doubleValue() > 100)
+							if (filterValue.doubleValue() < -1 || filterValue.doubleValue() > 100)
 							{
-								System.out.print("Enter a valid value (valid values are between 0 and 100).\n");
+								System.out.print("Enter a valid value (valid values are between -1 and 100).\n");
 							}
 							
-						} while (filterValue.doubleValue() < 0 || filterValue.doubleValue() > 100);
+						} while (filterValue.doubleValue() < -1 || filterValue.doubleValue() > 100);
 						
 						return this.showResults(filterByValueGreaterThan(listToManipulate, filterValue));
 					case 3:

@@ -25,6 +25,11 @@ public class IntegrationTest {
 	static List<Grade> allGrades;
 
 	static AverageGrades averageGrades;
+	
+	static List<Grade> noGrades;
+	
+	static List<Grade> sameGrades;
+	
 	static TempAbstractLinkedList list;
 	
 	static Grade grade1;
@@ -66,6 +71,17 @@ public class IntegrationTest {
 	
 	static void integrateMenu() throws Exception
 	{	
+		
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
 		grade1 = new Grade(90.1, "CptS 322");
 		
 		grade2 = new Grade(96.0, "CptS 321");
@@ -78,8 +94,6 @@ public class IntegrationTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
-		Collections.addAll(resultGradesToCompare, grade4, grade5);
-		
 		allGrades = new ArrayList<Grade>();
 		
 		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
@@ -90,54 +104,381 @@ public class IntegrationTest {
 		
 		String ret;
 		
-		PowerMockito.when(sGradeFilterer.filterByValueLessThan(allGrades, 80)).thenReturn(
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(noGrades, 0)).thenReturn(
 				resultGradesToCompare);
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 75.0, Grade: C, Class: CptS 315"
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 0\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 1, 0, null); // V2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(allGrades, 0)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 0\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 0, null); // V2L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(noGrades, 50)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 50\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 1, 50, null); // V3L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(allGrades, 20)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 20\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 20, null); // V3L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade3, grade4, grade5);
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(allGrades, 85)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317"
+				+ "\nScore: 75.0, Grade: C, Class: CptS 315"
 				+ "\nScore: 61.0, Grade: D, Class: CptS 360\n\n");
 
 		//System.out.print("Test input: 1, 1, 80\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 1, 80, null);
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 85, null); // V3L2G2
 		
-		assertEquals("Grades fitting the criterion\nScore: 75.0, Grade: C, Class: CptS 315"
+		assertEquals("Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317"
+				+ "\nScore: 75.0, Grade: C, Class: CptS 315"
 				+ "\nScore: 61.0, Grade: D, Class: CptS 360\n\n", ret);
 		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(allGrades, 98)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
+
+		//System.out.print("Test input: 1, 1, 98\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 98, null); // V3L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(noGrades, 101)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 101\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 1, 101, null); // V4L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		
+		PowerMockito.when(sGradeFilterer.filterByValueLessThan(allGrades, 101)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
+
+		//System.out.print("Test input: 1, 1, 101\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 101, null); // V4L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(noGrades, -1)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 2, -1\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 2, -1, null); // V2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(allGrades, -1)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+						+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+						+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+						+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
+
+		//System.out.print("Test input: 1, 2, -1\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, -1, null); // V2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(noGrades, 89)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 2, 89\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 2, 89, null); // V3L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(allGrades, 98)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 2, 98\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 98, null); // V3L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
 		Collections.addAll(resultGradesToCompare, grade1, grade2);
 		
-		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(allGrades, 90)).thenReturn(
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(allGrades, 89)).thenReturn(
 				resultGradesToCompare);
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
 				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
 				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n");
 
-		//System.out.print("Test input: 1, 2, 90\n");
+		//System.out.print("Test input: 1, 2, 89\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 2, 90, null);
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 89, null); // V3L2G2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
 				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade3);
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
 		
-		PowerMockito.when(sGradeFilterer.filterByValueEqualTo(allGrades, 82)).thenReturn(
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(allGrades, 20)).thenReturn(
 				resultGradesToCompare);
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317");
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+						+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+						+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+						+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
 
-		//System.out.print("Test input: 1, 3, 82\n");
+		//System.out.print("Test input: 1, 2, 20\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 3, 82, null);
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 20, null); // V3L2G3
 		
-		assertEquals("Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317", ret);
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(noGrades, 100)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 2, 100\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 2, 100, null); // V4L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueGreaterThan(allGrades, 100)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 2, 100\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 100, null); // V4L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueEqualTo(noGrades, 90)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 3, 90\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 3, 90, null); // V2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByValueEqualTo(allGrades, 50)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 3, 50\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 3, 50, null); // V2L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1);
+		
+		PowerMockito.when(sGradeFilterer.filterByValueEqualTo(allGrades, 90)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322");
+
+		//System.out.print("Test input: 1, 3, 90\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 3, 90, null); // V2L2G2
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		PowerMockito.when(sGradeFilterer.filterByValueEqualTo(sameGrades, 90)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
+
+		//System.out.print("Test input: 1, 3, 90\n");
+		
+		ret = sGradeFilterer.doMain(sameGrades, 1, 3, 90, null); // V2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		allGrades.clear();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByCategory(noGrades, 'X')).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 2, X\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 2, 0, null, 'X'); // V2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByCategory(allGrades, 'F')).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 2, F\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'F'); // V2L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
@@ -152,26 +493,48 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 2, A\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'A');
+		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'A'); // V2L2G2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
 				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade3);
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
 		
-		PowerMockito.when(sGradeFilterer.filterByCategory(allGrades, 'B')).thenReturn(
+		PowerMockito.when(sGradeFilterer.filterByCategory(sameGrades, 'A')).thenReturn(
 				resultGradesToCompare);
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n\n");
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
 
-		//System.out.print("Test input: 2, B\n");
+		//System.out.print("Test input: 1, 3, 90\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'B');
+		ret = sGradeFilterer.doMain(sameGrades, 2, 0, null, 'A'); // V2L2G3
 		
-		assertEquals("Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n\n", ret);
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByOccurencesScore(noGrades, 1)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 3, 1\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 3, 0, 1, null); // N2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
@@ -189,7 +552,7 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 3, 1\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 3, 0, 1, null);
+		ret = sGradeFilterer.doMain(allGrades, 3, 0, 1, null); // N2L2G2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
@@ -207,29 +570,47 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 3, 2\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 3, 0, 2, null);
+		ret = sGradeFilterer.doMain(allGrades, 3, 0, 2, null); // N2L2G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade3, grade4, grade5);
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
 		
-		PowerMockito.when(sGradeFilterer.filterByOccurencesGrade(allGrades, 1)).thenReturn(
+		PowerMockito.when(sGradeFilterer.filterByOccurencesScore(sameGrades, 5)).thenReturn(
 				resultGradesToCompare);
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n"
-				+ "Grades fitting the criterion\nScore: 75.0, Grade: C, Class: CptS 315\n"
-				+ "Grades fitting the criterion\nScore: 61.0, Grade: D, Class: CptS 360\n\n");
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
+
+		//System.out.print("Test input: 3, 5\n");
+		
+		ret = sGradeFilterer.doMain(sameGrades, 3, 0, 5, null); // N2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.filterByOccurencesGrade(noGrades, 1)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
 
 		//System.out.print("Test input: 4, 1\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 4, 0, 1, null);
+		ret = sGradeFilterer.doMain(noGrades, 4, 0, 1, null); // N2L1G1
 		
-		assertEquals("Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n"
-				+ "Grades fitting the criterion\nScore: 75.0, Grade: C, Class: CptS 315\n"
-				+ "Grades fitting the criterion\nScore: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
@@ -244,7 +625,7 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 4, 2\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 4, 0, 2, null);
+		ret = sGradeFilterer.doMain(allGrades, 4, 0, 2, null); // N2L2G2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n\n", ret);
@@ -259,9 +640,33 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 4, 3\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 4, 0, 3, null);
+		ret = sGradeFilterer.doMain(allGrades, 4, 0, 3, null); // N2L2G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		PowerMockito.when(sGradeFilterer.filterByOccurencesGrade(sameGrades, 5)).thenReturn(
+				resultGradesToCompare);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
+
+		//System.out.print("Test input: 4, 1\n");
+		
+		ret = sGradeFilterer.doMain(sameGrades, 4, 0, 5, null); // N2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
 		
 		System.out.print("\nPassed IntegrateMenu\n\n");
 	}
@@ -269,7 +674,17 @@ public class IntegrationTest {
 
 	
 	static void integrateFilterByValueLessThan() throws Exception
-	{	
+	{
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
 		grade1 = new Grade(90.1, "CptS 322");
 		
 		grade2 = new Grade(96.0, "CptS 321");
@@ -292,18 +707,27 @@ public class IntegrationTest {
 		
 		String ret;
 		
-		Collections.addAll(resultGradesToCompare, grade4, grade5);
+		resultGradesToCompare.clear();
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 75.0, Grade: C, Class: CptS 315"
-				+ "\nScore: 61.0, Grade: D, Class: CptS 360\n\n");
+				"Grades fitting the criterion\n\n");
 
-		//System.out.print("Test input: 1, 1, 80\n");
+		//System.out.print("Test input: 1, 1, 0\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 1, 80, null);
+		ret = sGradeFilterer.doMain(noGrades, 1, 1, 0, null); // V2L1G1
 		
-		assertEquals("Grades fitting the criterion\nScore: 75.0, Grade: C, Class: CptS 315"
-				+ "\nScore: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 0\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 0, null); // V2L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
@@ -312,7 +736,67 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 1, 1, 50\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 1, 50, null);
+		ret = sGradeFilterer.doMain(noGrades, 1, 1, 50, null); // V3L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 20\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 20, null); // V3L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade3, grade4, grade5);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317"
+				+ "\nScore: 75.0, Grade: C, Class: CptS 315"
+				+ "\nScore: 61.0, Grade: D, Class: CptS 360\n\n");
+
+		//System.out.print("Test input: 1, 1, 80\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 85, null); // V3L2G2
+		
+		assertEquals("Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317"
+				+ "\nScore: 75.0, Grade: C, Class: CptS 315"
+				+ "\nScore: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
+
+		//System.out.print("Test input: 1, 1, 98\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 98, null); // V3L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 1, 101\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 1, 101, null); // V4L1G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
 		
@@ -327,21 +811,33 @@ public class IntegrationTest {
 				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
 				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
 
-		//System.out.print("Test input: 1, 1, 99\n");
+		//System.out.print("Test input: 1, 1, 101\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 1, 99, null);
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 101, null); // V4L2G3
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
 				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
 				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
 				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
+		resultGradesToCompare.clear();
 		
 		System.out.print("\nPassed integrateFilterByValueLessThan\n\n");
 	}
 	
 	static void integrateFilterByValueGreaterThan() throws Exception
 	{	
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
 		grade1 = new Grade(90.1, "CptS 322");
 		
 		grade2 = new Grade(96.0, "CptS 321");
@@ -366,27 +862,12 @@ public class IntegrationTest {
 		
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade1, grade2);
-		
-		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
-				+ "Grades fitting the criterion\nScore: 96.0, Grade: A, Class: CptS 321\n\n");
-
-		//System.out.print("Test input: 1, 2, 90\n");
-		
-		ret = sGradeFilterer.doMain(allGrades, 1, 2, 90, null);
-		
-		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
-				+ "Grades fitting the criterion\nScore: 96.0, Grade: A, Class: CptS 321\n\n", ret);
-		
-		resultGradesToCompare.clear();
-		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
 				"Grades fitting the criterion\n\n");
 
-		//System.out.print("Test input: 1, 2, 99\n");
+		//System.out.print("Test input: 1, 2, -1\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 2, 99, null);
+		ret = sGradeFilterer.doMain(noGrades, 1, 2, -1, null); // V2L1G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
 		
@@ -396,14 +877,14 @@ public class IntegrationTest {
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
 				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
-				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
-				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
-				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
-				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
+						+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+						+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+						+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+						+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
 
-		//System.out.print("Test input: 1, 2, 50\n");
+		//System.out.print("Test input: 1, 2, -1\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 2, 50, null);
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, -1, null); // V2L2G3
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
@@ -411,97 +892,28 @@ public class IntegrationTest {
 				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
 				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
 		
-		System.out.print("\nPassed integrateFilterByValueGreaterThan\n\n");
-	}
-	
-	static void integrateFilterByValueEqualTo() throws Exception
-	{	
-		grade1 = new Grade(90.1, "CptS 322");
-		
-		grade2 = new Grade(96.0, "CptS 321");
-		
-		grade3 = new Grade(82.0, "CptS 317");
-		
-		grade4 = new Grade(75.0, "CptS 315");
-		
-		grade5 = new Grade(61.0, "CptS 360");
-		
-		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
-		
-		allGrades = new ArrayList<Grade>();
-		
-		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
-		
-		FilterGrades GradeFilterer = new FilterGrades();
-		
-		FilterGrades sGradeFilterer = PowerMockito.spy(GradeFilterer);
-		
-		String ret;
-		
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade1);
-		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n\n");
+				"Grades fitting the criterion\n\n");
 
-		//System.out.print("Test input: 1, 3, 90\n");
+		//System.out.print("Test input: 1, 2, 89\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 3, 90, null);
+		ret = sGradeFilterer.doMain(noGrades, 1, 2, 89, null); // V3L1G1
 		
-		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
 				"Grades fitting the criterion\n\n");
 
-		//System.out.print("Test input: 1, 3, 50\n");
+		//System.out.print("Test input: 1, 2, 98\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 1, 3, 50, null);
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 98, null); // V3L2G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
 		
-		resultGradesToCompare.clear();
-		
-		Collections.addAll(resultGradesToCompare, grade5);
-		
-		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 61.0, Grade: D, Class: CptS 360\n\n");
-
-		//System.out.print("Test input: 1, 3, 61\n");
-		
-		ret = sGradeFilterer.doMain(allGrades, 1, 3, 61, null);
-		
-		assertEquals("Grades fitting the criterion\nScore: 61.0, Grade: D, Class: CptS 360\n\n", ret);
-		
-		System.out.print("\nPassed integrateFilterByValueEqualTo\n\n");
-	}
-	
-	static void integrateFilterByCategory() throws Exception
-	{
-		grade1 = new Grade(90.1, "CptS 322");
-		
-		grade2 = new Grade(96.0, "CptS 321");
-		
-		grade3 = new Grade(82.0, "CptS 317");
-		
-		grade4 = new Grade(75.0, "CptS 315");
-		
-		grade5 = new Grade(61.0, "CptS 360");
-		
-		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
-		
-		allGrades = new ArrayList<Grade>();
-		
-		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
-		
-		FilterGrades GradeFilterer = new FilterGrades();
-		
-		FilterGrades sGradeFilterer = PowerMockito.spy(GradeFilterer);
-		
-		String ret;
-
 		resultGradesToCompare.clear();
 		
 		Collections.addAll(resultGradesToCompare, grade1, grade2);
@@ -510,43 +922,73 @@ public class IntegrationTest {
 				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
 				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n");
 
-		//System.out.print("Test input: 2, A\n");
+		//System.out.print("Test input: 1, 2, 89\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'A');
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 89, null); // V3L2G2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
 				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n", ret);
 		
-		
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade3);
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n\n");
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+						+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+						+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+						+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
 
-		//System.out.print("Test input: 2, B\n");
+		//System.out.print("Test input: 1, 2, 20\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'B');
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 20, null); // V3L2G3
 		
-		assertEquals("Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n\n", ret);
-
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
+				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
+				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		
 		resultGradesToCompare.clear();
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
 				"Grades fitting the criterion\n\n");
 
-		//System.out.print("Test input: 2, F\n");
+		//System.out.print("Test input: 1, 2, 100\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'F');
+		ret = sGradeFilterer.doMain(noGrades, 1, 2, 100, null); // V4L1G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
 
-		System.out.print("\nPassed integrateFilterByCategory\n\n");
+		//System.out.print("Test input: 1, 2, 100\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 2, 100, null); // V4L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		System.out.print("\nPassed integrateFilterByValueGreaterThan\n\n");
 	}
 	
-	static void integrateFilterByOccurencesScore() throws Exception
-	{
+	static void integrateFilterByValueEqualTo() throws Exception
+	{	
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
 		grade1 = new Grade(90.1, "CptS 322");
 		
 		grade2 = new Grade(96.0, "CptS 321");
@@ -568,14 +1010,212 @@ public class IntegrationTest {
 		FilterGrades sGradeFilterer = PowerMockito.spy(GradeFilterer);
 		
 		String ret;
+		
 
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 3, 90\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 1, 3, 90, null); // V2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 1, 3, 50\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 3, 50, null); // V2L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322");
+
+		//System.out.print("Test input: 1, 3, 90\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 3, 90, null); // V2L2G2
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
+
+		//System.out.print("Test input: 1, 3, 90\n");
+		
+		ret = sGradeFilterer.doMain(sameGrades, 1, 3, 90, null); // V2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		System.out.print("\nPassed integrateFilterByValueEqualTo\n\n");
+	}
+	
+	static void integrateFilterByCategory() throws Exception
+	{
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
+		grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(96.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
 		allGrades = new ArrayList<Grade>();
 		
 		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		FilterGrades GradeFilterer = new FilterGrades();
+		
+		FilterGrades sGradeFilterer = PowerMockito.spy(GradeFilterer);
+		
+		String ret;
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 2, X\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 2, 0, null, 'X'); // V2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 2, F\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'F'); // V2L2G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
+				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n");
+
+		//System.out.print("Test input: 2, A\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 2, 0, null, 'A'); // V2L2G2
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
+				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
+
+		//System.out.print("Test input: 1, 3, 90\n");
+		
+		ret = sGradeFilterer.doMain(sameGrades, 2, 0, null, 'A'); // V2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
+
+		System.out.print("\nPassed integrateFilterByCategory\n\n");
+	}
+	
+	static void integrateFilterByOccurencesScore() throws Exception
+	{
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
+		grade1 = new Grade(90.1, "CptS 322");
+		
+		grade2 = new Grade(96.0, "CptS 321");
+		
+		grade3 = new Grade(82.0, "CptS 317");
+		
+		grade4 = new Grade(75.0, "CptS 315");
+		
+		grade5 = new Grade(61.0, "CptS 360");
+		
+		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
+		
+		allGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		FilterGrades GradeFilterer = new FilterGrades();
+		
+		FilterGrades sGradeFilterer = PowerMockito.spy(GradeFilterer);
+		
+		String ret;
+		
+		resultGradesToCompare.clear();
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\n\n");
+
+		//System.out.print("Test input: 3, 1\n");
+		
+		ret = sGradeFilterer.doMain(noGrades, 3, 0, 1, null); // N2L1G1
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
 		
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
 				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
@@ -586,7 +1226,7 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 3, 1\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 3, 0, 1, null);
+		ret = sGradeFilterer.doMain(allGrades, 3, 0, 1, null); // N2L2G2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
@@ -601,15 +1241,48 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 3, 2\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 3, 0, 2, null);
+		ret = sGradeFilterer.doMain(allGrades, 3, 0, 2, null); // N2L2G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		resultGradesToCompare.clear();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
+
+		//System.out.print("Test input: 3, 5\n");
+		
+		ret = sGradeFilterer.doMain(sameGrades, 3, 0, 5, null); // N2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
 
 		System.out.print("\nPassed integrateFilterByOccurencesScore\n\n");
 	}
 	
 	static void integrateFilterByOccurencesGrade() throws Exception
 	{
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
 		grade1 = new Grade(90.1, "CptS 322");
 		
 		grade2 = new Grade(96.0, "CptS 321");
@@ -634,20 +1307,14 @@ public class IntegrationTest {
 
 		resultGradesToCompare.clear();
 		
-		Collections.addAll(resultGradesToCompare, grade3, grade4, grade5);
-
 		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
-				"Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n"
-				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
-				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n");
+				"Grades fitting the criterion\n\n");
 
 		//System.out.print("Test input: 4, 1\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 4, 0, 1, null);
+		ret = sGradeFilterer.doMain(noGrades, 4, 0, 1, null); // N2L1G1
 		
-		assertEquals("Grades fitting the criterion\nScore: 82.0, Grade: B, Class: CptS 317\n"
-				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
-				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", ret);
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		resultGradesToCompare.clear();
 		
@@ -659,7 +1326,7 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 4, 2\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 4, 0, 2, null);
+		ret = sGradeFilterer.doMain(allGrades, 4, 0, 2, null); // N2L2G2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n\n", ret);
@@ -671,15 +1338,46 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 4, 3\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 4, 0, 3, null);
+		ret = sGradeFilterer.doMain(allGrades, 4, 0, 3, null); // N2L2G1
 		
 		assertEquals("Grades fitting the criterion\n\n", ret);
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		PowerMockito.when(sGradeFilterer.showResults(resultGradesToCompare)).thenReturn(
+				"Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+						+ "Score: 90.1, Grade: A, Class: CptS 322\n\n");
+
+		//System.out.print("Test input: 4, 5\n");
+		
+		ret = sGradeFilterer.doMain(sameGrades, 4, 0, 5, null); // N2L2G3
+		
+		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n"
+				+ "Score: 90.1, Grade: A, Class: CptS 322\n\n", ret);
+		
+		resultGradesToCompare.clear();
 		
 		System.out.print("\nPassed integrateFilterByOccurencesGrade\n\n");
 	}
 	
 	static void integrateShowResults() throws Exception
 	{
+		allGrades = new ArrayList<Grade>();
+		
+		sameGrades = new ArrayList<Grade>();
+		
+		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
+		
 		grade1 = new Grade(90.1, "CptS 322");
 		
 		grade2 = new Grade(96.0, "CptS 321");
@@ -699,6 +1397,12 @@ public class IntegrationTest {
 		FilterGrades sGradeFilterer = PowerMockito.spy(GradeFilterer);
 		
 		String ret;
+		
+		//System.out.print("Test input: 1, 1, 80\n");
+		
+		ret = sGradeFilterer.doMain(allGrades, 1, 1, 0, null); // L2
+		
+		assertEquals("Grades fitting the criterion\n\n", ret);
 		
 		//System.out.print("Test input: 1, 1, 80\n");
 		
@@ -729,7 +1433,7 @@ public class IntegrationTest {
 
 		//System.out.print("Test input: 3, 1\n");
 		
-		ret = sGradeFilterer.doMain(allGrades, 3, 0, 1, null);
+		ret = sGradeFilterer.doMain(allGrades, 3, 0, 1, null); // L2
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322\n"
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n"

@@ -27,6 +27,10 @@ class FilterGradesTest {
 	
 	List<Grade> allGrades;
 	
+	List<Grade> noGrades;
+	
+	List<Grade> sameGrades;
+	
 	static Grade grade1;
 	
 	static Grade grade2;
@@ -64,7 +68,13 @@ class FilterGradesTest {
 		
 		allGrades = new ArrayList<Grade>();
 		
+		sameGrades = new ArrayList<Grade>();
+		
 		Collections.addAll(allGrades, grade1, grade2, grade3, grade4, grade5);
+		
+		Collections.addAll(sameGrades, grade1, grade1, grade1, grade1, grade1);
+		
+		noGrades = new ArrayList<Grade>();
 	}
 
 	@AfterEach
@@ -76,11 +86,29 @@ class FilterGradesTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
+		List<Grade> resultList = gradeFilterer.filterByValueLessThan(noGrades, 0);
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L1G1
+		
+		resultList = gradeFilterer.filterByValueLessThan(noGrades, 50);
+		
+		assertEquals(resultGradesToCompare, resultList); // V3L1G1
+		
+		resultList = gradeFilterer.filterByValueLessThan(noGrades, 101);
+		
+		assertEquals(resultGradesToCompare, resultList); // V4L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		resultList = gradeFilterer.filterByValueLessThan(allGrades, 0);
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L2G1
+		
 		Collections.addAll(resultGradesToCompare, grade3, grade4, grade5);
 		
-		List<Grade> resultList = gradeFilterer.filterByValueLessThan(allGrades, 85);
+		resultList = gradeFilterer.filterByValueLessThan(allGrades, 85);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // V3L2G2
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
@@ -92,9 +120,25 @@ class FilterGradesTest {
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		
+		resultList = gradeFilterer.filterByValueLessThan(allGrades, 98);
+		
+		assertEquals(resultGradesToCompare, resultList); // V3L2G3
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		
+		resultList = gradeFilterer.filterByValueLessThan(allGrades, 101);
+		
+		assertEquals(resultGradesToCompare, resultList); // V4L2G3
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
 		resultList = gradeFilterer.filterByValueLessThan(allGrades, 20);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // V3L2G1
 	}
 
 	@Test
@@ -102,11 +146,21 @@ class FilterGradesTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
+		List<Grade> resultList = gradeFilterer.filterByValueGreaterThan(noGrades, -1);
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L1G1
+		
+		resultList = gradeFilterer.filterByValueGreaterThan(noGrades, 100);
+		
+		assertEquals(resultGradesToCompare, resultList); // V4L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
 		Collections.addAll(resultGradesToCompare, grade1, grade2);
 		
-		List<Grade> resultList = gradeFilterer.filterByValueGreaterThan(allGrades, 89);
+		resultList = gradeFilterer.filterByValueGreaterThan(allGrades, 89);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // V3L2G2
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
@@ -120,15 +174,41 @@ class FilterGradesTest {
 		
 		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
 		
-		resultList = gradeFilterer.filterByValueGreaterThan(allGrades, 20);
+		resultList = gradeFilterer.filterByValueGreaterThan(allGrades, -1);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // V2L2G3
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
-		resultList = gradeFilterer.filterByValueGreaterThan(allGrades, 99);
+		resultList = gradeFilterer.filterByValueGreaterThan(noGrades, 89);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // V3L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
+		
+		resultList = gradeFilterer.filterByValueGreaterThan(allGrades, 20);
+		
+		assertEquals(resultGradesToCompare, resultList); // V3L2G3
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		resultList = gradeFilterer.filterByValueGreaterThan(allGrades, 98);
+		
+		assertEquals(resultGradesToCompare, resultList); // V3L2G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		resultList = gradeFilterer.filterByValueGreaterThan(noGrades, 100);
+		
+		assertEquals(resultGradesToCompare, resultList); // V4L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		resultList = gradeFilterer.filterByValueGreaterThan(allGrades, 100);
+		
+		assertEquals(resultGradesToCompare, resultList); // V4L2G1
 	}
 
 	@Test
@@ -136,9 +216,29 @@ class FilterGradesTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
+		List<Grade> resultList = gradeFilterer.filterByValueEqualTo(noGrades, 90);
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		resultList = gradeFilterer.filterByValueEqualTo(allGrades, 50);
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L2G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		Collections.addAll(resultGradesToCompare, grade1);
+		
+		resultList = gradeFilterer.filterByValueEqualTo(allGrades, 90);
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L2G2
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
 		Collections.addAll(resultGradesToCompare, grade2);
 		
-		List<Grade> resultList = gradeFilterer.filterByValueEqualTo(allGrades, 96);
+		resultList = gradeFilterer.filterByValueEqualTo(allGrades, 96);
 		
 		assertEquals(resultGradesToCompare, resultList);
 		
@@ -165,6 +265,14 @@ class FilterGradesTest {
 		resultList = gradeFilterer.filterByValueEqualTo(allGrades, 61);
 		
 		assertEquals(resultGradesToCompare, resultList);
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		resultList = gradeFilterer.filterByValueEqualTo(sameGrades, 90);
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L2G3
 	}
 
 	@Test
@@ -172,11 +280,23 @@ class FilterGradesTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
+		List<Grade> resultList = gradeFilterer.filterByCategory(noGrades, 'A');
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		resultList = gradeFilterer.filterByCategory(allGrades, 'F');
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L2G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
 		Collections.addAll(resultGradesToCompare, grade1, grade2);
 		
-		List<Grade> resultList = gradeFilterer.filterByCategory(allGrades, 'A');
+		resultList = gradeFilterer.filterByCategory(allGrades, 'A');
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); //V2L2G2
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
@@ -201,6 +321,14 @@ class FilterGradesTest {
 		resultList = gradeFilterer.filterByCategory(allGrades, 'D');
 		
 		assertEquals(resultGradesToCompare, resultList);
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		resultList = gradeFilterer.filterByCategory(sameGrades, 'A');
+		
+		assertEquals(resultGradesToCompare, resultList); // V2L2G3
 	}
 
 	@Test
@@ -208,11 +336,17 @@ class FilterGradesTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
+		List<Grade> resultList = gradeFilterer.filterByOccurencesScore(noGrades, 1);
+		
+		assertEquals(resultGradesToCompare, resultList); // N2L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
 		Collections.addAll(resultGradesToCompare, grade1, grade2, grade3, grade4, grade5);
 		
-		List<Grade> resultList = gradeFilterer.filterByOccurencesScore(allGrades, 1);
+		resultList = gradeFilterer.filterByOccurencesScore(allGrades, 1);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // N2L2G2
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
@@ -220,7 +354,15 @@ class FilterGradesTest {
 		
 		resultList = gradeFilterer.filterByOccurencesScore(allGrades, 2);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // N2L2G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		resultList = gradeFilterer.filterByOccurencesScore(sameGrades, 5);
+		
+		assertEquals(resultGradesToCompare, resultList); // N2L2G3
 	}
 
 	@Test
@@ -228,11 +370,17 @@ class FilterGradesTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
+		List<Grade> resultList = gradeFilterer.filterByOccurencesGrade(noGrades, 1);
+		
+		assertEquals(resultGradesToCompare, resultList); // N2L1G1
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
 		Collections.addAll(resultGradesToCompare, grade1, grade2);
 		
-		List<Grade> resultList = gradeFilterer.filterByOccurencesGrade(allGrades, 2);
+		resultList = gradeFilterer.filterByOccurencesGrade(allGrades, 2);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // N2L2G2
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
@@ -240,7 +388,7 @@ class FilterGradesTest {
 		
 		resultList = gradeFilterer.filterByOccurencesGrade(allGrades, 3);
 		
-		assertEquals(resultGradesToCompare, resultList);
+		assertEquals(resultGradesToCompare, resultList); // N2L2G1
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
@@ -251,6 +399,14 @@ class FilterGradesTest {
 		resultList = gradeFilterer.filterByOccurencesGrade(allGrades, 1);
 		
 		assertEquals(resultGradesToCompare, resultList);
+		
+		resultGradesToCompare = new ArrayList<Grade>();
+		
+		Collections.addAll(resultGradesToCompare, grade1, grade1, grade1, grade1, grade1);
+		
+		resultList = gradeFilterer.filterByOccurencesGrade(sameGrades, 5);
+		
+		assertEquals(resultGradesToCompare, resultList); // N2L2G3
 	}
 
 	@Test
@@ -258,14 +414,14 @@ class FilterGradesTest {
 		
 		List<Grade> resultGradesToCompare = new ArrayList<Grade>();
 		
-		assertEquals("Grades fitting the criterion\n\n", gradeFilterer.showResults(resultGradesToCompare));
+		assertEquals("Grades fitting the criterion\n\n", gradeFilterer.showResults(resultGradesToCompare)); // L1
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
 		Collections.addAll(resultGradesToCompare, grade1, grade2);
 		
 		assertEquals("Grades fitting the criterion\nScore: 90.1, Grade: A, Class: CptS 322"
-				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n", gradeFilterer.showResults(resultGradesToCompare));
+				+ "\nScore: 96.0, Grade: A, Class: CptS 321\n\n", gradeFilterer.showResults(resultGradesToCompare)); // L2
 		
 		resultGradesToCompare = new ArrayList<Grade>();
 		
@@ -275,41 +431,49 @@ class FilterGradesTest {
 				+ "Score: 96.0, Grade: A, Class: CptS 321\n"
 				+ "Score: 82.0, Grade: B, Class: CptS 317\n"
 				+ "Score: 75.0, Grade: C, Class: CptS 315\n"
-				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", gradeFilterer.showResults(resultGradesToCompare));
+				+ "Score: 61.0, Grade: D, Class: CptS 360\n\n", gradeFilterer.showResults(resultGradesToCompare)); // L3
 	}
 
 	@Test
 	void testNumOccurencesDoubleListOfGrade() {
-		assertEquals(0, gradeFilterer.numOccurences(85.0, allGrades));
+		assertEquals(0, gradeFilterer.numOccurences(90.1, noGrades)); // V2L2G1
 		
-		assertEquals(1, gradeFilterer.numOccurences(61.0, allGrades));
-
-		assertEquals(1, gradeFilterer.numOccurences(82.0, allGrades));
-
-		assertEquals(1, gradeFilterer.numOccurences(75.0, allGrades));
+		assertEquals(0, gradeFilterer.numOccurences(85.0, allGrades)); // V2L2G1
 		
-		assertEquals(1, gradeFilterer.numOccurences(96.0, allGrades));
+		assertEquals(1, gradeFilterer.numOccurences(61.0, allGrades)); // V2L2G2
 
-		assertEquals(0, gradeFilterer.numOccurences(96.5, allGrades));
+		assertEquals(1, gradeFilterer.numOccurences(82.0, allGrades)); // V2L2G2
 
-		assertEquals(1, gradeFilterer.numOccurences(90.1, allGrades));
+		assertEquals(1, gradeFilterer.numOccurences(75.0, allGrades)); // V2L2G2
+		
+		assertEquals(1, gradeFilterer.numOccurences(96.0, allGrades)); // V2L2G2
+
+		assertEquals(0, gradeFilterer.numOccurences(96.5, allGrades)); // V2L2G1
+
+		assertEquals(1, gradeFilterer.numOccurences(90.1, allGrades)); // V2L2G2
+
+		assertEquals(5, gradeFilterer.numOccurences(90.1, sameGrades)); // V2L2G3
 	}
 
 	@Test
 	void testNumOccurencesCharacterListOfGrade() {
-		assertEquals(2, gradeFilterer.numOccurences('A', allGrades));
-
-		assertEquals(1, gradeFilterer.numOccurences('B', allGrades));
+		assertEquals(0, gradeFilterer.numOccurences('A', noGrades)); // V2L1G1
 		
-		assertEquals(1, gradeFilterer.numOccurences('C', allGrades));
+		assertEquals(2, gradeFilterer.numOccurences('A', allGrades)); // V2L2G2
 
-		assertEquals(1, gradeFilterer.numOccurences('D', allGrades));
-
-		assertEquals(0, gradeFilterer.numOccurences('F', allGrades));
+		assertEquals(1, gradeFilterer.numOccurences('B', allGrades)); // V2L2G2
 		
-		assertEquals(0, gradeFilterer.numOccurences('P', allGrades));
+		assertEquals(1, gradeFilterer.numOccurences('C', allGrades)); // V2L2G2
 
-		assertEquals(0, gradeFilterer.numOccurences('E', allGrades));
+		assertEquals(1, gradeFilterer.numOccurences('D', allGrades)); // V2L2G2
+
+		assertEquals(0, gradeFilterer.numOccurences('F', allGrades)); // V2L2G1
+		
+		assertEquals(0, gradeFilterer.numOccurences('P', allGrades)); // V2L2G1
+
+		assertEquals(0, gradeFilterer.numOccurences('E', allGrades)); // V2L2G1
+
+		assertEquals(5, gradeFilterer.numOccurences('A', sameGrades)); // V2L2G3
 	}
 
 }
