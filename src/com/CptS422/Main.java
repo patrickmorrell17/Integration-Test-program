@@ -46,8 +46,8 @@ public class Main {
 				grades.add(grade2);
 				grades.add(grade3);
 				
-				SortGrades sort = new SortGrades(grades);
-				sort.Menu();
+				//SortGrades sort = new SortGrades(grades);
+				//sort.Menu();
 				break;
 			case 2:
 				FilterGrades gradeFilterer = new FilterGrades();
