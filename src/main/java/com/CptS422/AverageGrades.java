@@ -31,6 +31,9 @@ public class AverageGrades {
     }
 
     public Double getAverageGrade(){
+        if(this.list.size() == 0) {
+            return 0.0;
+        }
         Double sum = 0.0;
         Double average = 0.0;
         for(Integer i = 0; i < this.list.size(); ++i){

@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.commons.collections4.list.GrowthList;
 import org.apache.commons.collections4.list.TreeList;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.powermock.api.mockito.PowerMockito;
 
 public class IntegrationTest {
@@ -1890,16 +1891,25 @@ public class IntegrationTest {
 
 		Grade grade5 = new Grade(61.0, "CptS 360");
 		list = new TempAbstractLinkedList();
+		TempAbstractLinkedList emptyList = new TempAbstractLinkedList();
+		TempAbstractLinkedList oneItemList = new TempAbstractLinkedList();
 		list.init2();
+		emptyList.init2();
+		oneItemList.init2();
 		list.add(grade1);
 		list.add(grade2);
 		list.add(grade3);
 		list.add(grade4);
 		list.add(grade5);
+		oneItemList.add(grade1);
 		averageGrades = new AverageGrades(list);
+		AverageGrades emptyGrades = new AverageGrades(emptyList);
+		AverageGrades oneGrade = new AverageGrades(oneItemList);
 		Double temp = (averageGrades.getAverageGrade());
 		Double temp2 = 80.82000000000001;
 		assertEquals(temp2, temp);
+		assertEquals(0.0, emptyGrades.getAverageGrade(), 0.01);
+		assertEquals(90.1, oneGrade.getAverageGrade(), 0.01);
 		System.out.print("\nPassed integrateAverageGrades\n\n");
 	}
 	
