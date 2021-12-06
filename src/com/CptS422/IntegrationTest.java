@@ -740,44 +740,34 @@ public class IntegrationTest {
 		grade4 = new Grade(75.0, "CptS 315");
 		grade5 = new Grade(61.0, "CptS 360");
 		
-		GrowthList<Grade> list = new GrowthList<Grade>();
 		DisplayGrades display = new DisplayGrades(5);
-		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
 		
-		doReturn(display).when(sList);
-		PowerMockito.when(sList.gradeList).thenReturn(list);
+		assertTrue(display.gradeList.isEmpty());
 		display.addGrade(grade1);
-		verify(display.gradeList, atLeastOnce()).add(grade1);
+		assertTrue(!display.gradeList.isEmpty());
+		
+		display.addGrade(grade2);
+		display.addGrade(grade3);
+		display.addGrade(grade4);
+		display.addGrade(grade5);
+		
+		assertEquals(5, display.size());
+		System.out.print("\nPassed integrateAddGrade\n\n");
+		
 	}
 	
 	static void integrateRemoveGradeIndex() {
 		grade1 = new Grade(90.1, "CptS 322");
-		grade2 = new Grade(96.0, "CptS 321");
-		grade3 = new Grade(82.0, "CptS 317");
-		grade4 = new Grade(75.0, "CptS 315");
-		grade5 = new Grade(61.0, "CptS 360");
 		
-		GrowthList<Grade> list = new GrowthList<Grade>();
 		DisplayGrades display = new DisplayGrades(5);
-		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
 		
-		doReturn(display).when(sList);
-		PowerMockito.when(sList.gradeList).thenReturn(list);
-		
-		assertTrue(list.isEmpty());
-		list.add(grade1);
-		list.add(grade2);
-		assertTrue(!list.isEmpty());
-		assertEquals(2, list.size());
-		list.remove(0);
-		assertTrue(!list.isEmpty());
-		assertEquals(1, list.size());
-		
+		assertTrue(display.gradeList.isEmpty());
 		display.addGrade(grade1);
-		display.addGrade(grade2);
-		display.addGrade(grade3);
+		assertTrue(!display.gradeList.isEmpty());
 		display.removeGradeIndex(0);
-		verify(display.gradeList, atLeastOnce()).remove(0);
+		assertTrue(display.gradeList.isEmpty());
+		
+		System.out.print("\nPassed integrateRemoveGradeIndex\n\n");
 	}
 	
 	static void integrateRemoveAllGrade() {
@@ -787,27 +777,21 @@ public class IntegrationTest {
 		grade4 = new Grade(75.0, "CptS 315");
 		grade5 = new Grade(61.0, "CptS 360");
 		
-		GrowthList<Grade> list = new GrowthList<Grade>();
 		DisplayGrades display = new DisplayGrades(5);
-		DisplayGrades sList = PowerMockito.spy(new DisplayGrades(5));
 		
-		doReturn(display).when(sList);
-		PowerMockito.when(sList.gradeList).thenReturn(list);
-		
-		assertTrue(list.isEmpty());
-		list.add(grade1);
-		list.add(grade2);
-		assertTrue(!list.isEmpty());
-		assertEquals(2, list.size());
-		list.remove(0);
-		assertTrue(!list.isEmpty());
-		assertEquals(1, list.size());
+		assertTrue(display.gradeList.isEmpty());
 		
 		display.addGrade(grade1);
 		display.addGrade(grade2);
 		display.addGrade(grade3);
+		display.addGrade(grade4);
+		display.addGrade(grade5);
+		
+		assertTrue(!display.gradeList.isEmpty());
+		
 		display.removeAllGrades();
-		verify(display.gradeList, atLeastOnce()).removeAll(list);
+		assertTrue(display.gradeList.isEmpty());
+		System.out.print("\nPassed integrateRemoveAllGrade\n\n");
 	}
 	
 	static void integrateDisplayGrade() {
@@ -829,6 +813,8 @@ public class IntegrationTest {
 		System.setOut(originalOut);
 		
 		display.displayGrades();
-		assertEquals("CptS 322: A\nCptS 321: A\nCptS 317: B\n", outContent.toString());
+		String result = "CptS 322: A\nCptS 321: A\nCptS 317: B\n";
+		assertTrue(result == outContent.toString());
+		System.out.print("\nPassed integrateDisplayGrade\n\n");
 	}
 }
