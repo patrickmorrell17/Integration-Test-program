@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.lang.IndexOutOfBoundsException;
 
 public class SortGrades {
 	public ArrayList<Grade> list;
@@ -68,7 +69,10 @@ public class SortGrades {
 		}
     }
     
-    public ArrayList<Grade> sortAscendingScore() {
+    public ArrayList<Grade> sortAscendingScore() throws IndexOutOfBoundsException{
+		if(this.list.size() == 0){
+			throw new IndexOutOfBoundsException();
+		}
     	
     	ArrayList<Double> tempList = new ArrayList<Double>();
 		for(int i = 0; i < this.list.size(); i++) {
@@ -93,7 +97,10 @@ public class SortGrades {
 		return list;
     }
     
-    public ArrayList<Grade> sortDescendingScore() {
+    public ArrayList<Grade> sortDescendingScore() throws IndexOutOfBoundsException{
+		if(this.list.size() == 0){
+			throw new IndexOutOfBoundsException();
+		}
     	
     	ArrayList<Double> tempList = new ArrayList<Double>();
 		for(int i = 0; i < this.list.size(); i++) {
@@ -122,7 +129,11 @@ public class SortGrades {
 		return list;
     }
     
-    public ArrayList<Grade> sortAscendingName() {
+    public ArrayList<Grade> sortAscendingName() throws IndexOutOfBoundsException{
+		if(this.list.size() == 0){
+			throw new IndexOutOfBoundsException();
+		}
+
     	ArrayList<String> tempList = new ArrayList<String>();
 		for(int i = 0; i < this.list.size(); i++) {
 			tempList.add(this.list.get(i).courseName);
@@ -146,7 +157,11 @@ public class SortGrades {
 		return list;
     }
     
-    public ArrayList<Grade> sortDescendingName() {
+    public ArrayList<Grade> sortDescendingName() throws IndexOutOfBoundsException{
+		if(this.list.size() == 0){
+			throw new IndexOutOfBoundsException();
+		}
+
     	ArrayList<String> tempList = new ArrayList<String>();
 		for(int i = 0; i < this.list.size(); i++) {
 			tempList.add(this.list.get(i).courseName);
@@ -174,7 +189,11 @@ public class SortGrades {
 		return list;
     }
     
-    public ArrayList<Grade> sortAscendingLetter() {
+    public ArrayList<Grade> sortAscendingLetter() throws IndexOutOfBoundsException{
+		if(this.list.size() == 0){
+			throw new IndexOutOfBoundsException();
+		}
+
     	ArrayList<Character> tempList = new ArrayList<Character>();
 		for(int i = 0; i < this.list.size(); i++) {
 			tempList.add(this.list.get(i).grade);
@@ -202,7 +221,11 @@ public class SortGrades {
 		return list;
     }
     
-    public ArrayList<Grade> sortDescendingLetter() {
+    public ArrayList<Grade> sortDescendingLetter() throws IndexOutOfBoundsException{
+		if(this.list.size() == 0){
+			throw new IndexOutOfBoundsException();
+		}
+
     	ArrayList<Character> tempList = new ArrayList<Character>();
 		for(int i = 0; i < this.list.size(); i++) {
 			tempList.add(this.list.get(i).grade);

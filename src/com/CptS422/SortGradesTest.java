@@ -217,4 +217,18 @@ public class SortGradesTest {
         assertEquals(test_sort.list.get(3).grade, sort.list.get(3).grade);
         assertEquals(test_sort.list.get(4).grade, sort.list.get(4).grade);
     }
+
+    @Test
+    static void testsortException()
+	{
+		ArrayList<Grade> list = new ArrayList<Grade>();
+		SortGrades sort = new SortGrades(list);
+		try {
+            sort.sortAscendingScore();
+        }
+        catch (IndexOutOfBoundsException e) {
+            System.out.print("\nPassed integrateSortException\n\n");
+            assertTrue(true);
+        }
+	}
 }

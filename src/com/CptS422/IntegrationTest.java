@@ -2,6 +2,7 @@ package com.CptS422;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -1413,5 +1414,18 @@ public class IntegrationTest {
         assertEquals(test_sort.list.get(3).grade, sort.list.get(3).grade);
         assertEquals(test_sort.list.get(4).grade, sort.list.get(4).grade);
 		System.out.print("\nPassed integrateSortDescendingLetter\n\n");
+	}
+
+	static void integrateSortException()
+	{
+		ArrayList<Grade> list = new ArrayList<Grade>();
+		SortGrades sort = new SortGrades(list);
+		try {
+            sort.sortAscendingScore();
+        }
+        catch (IndexOutOfBoundsException e) {
+            System.out.print("\nPassed integrateSortException\n\n");
+            assertTrue(true);
+        }
 	}
 }
